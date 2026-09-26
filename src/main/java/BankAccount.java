@@ -39,4 +39,22 @@ public abstract class BankAccount {
                 " balance=" + balance + "\n" +
                 "}";
     }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (!(o instanceof BankAccount)) {
+            return false;
+        }
+
+        BankAccount that = (BankAccount) o;
+        return number.equals(that.number);
+    }
+
+    @Override
+    public int hashCode() {
+        return number.hashCode();
+    }
 }
