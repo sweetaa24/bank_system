@@ -1,10 +1,10 @@
 public abstract class BankAccount {
-    private final String number;
+    private final AccountNumber number;
     private final String owner;
     private double balance;
 
     protected BankAccount(String number, String owner, double initialBalance){
-        this.number = number;
+        this.number = new AccountNumber(number);
         this.owner = owner;
         if (initialBalance >= 0) {
             this.balance = initialBalance;

@@ -6,8 +6,8 @@ public class TransferServiceTest {
 
     @Test
     void successfulTransferChangesBothBalances() {
-        BankAccount from = new DebitAccount("1", "Иван", 10000);
-        BankAccount to = new DebitAccount("2", "Пётр", 2000);
+        BankAccount from = new DebitAccount("0000000001", "Иван", 10000);
+        BankAccount to = new DebitAccount("0000000002", "Пётр", 2000);
         TransferService service = new TransferService(new NoCommission(), new ConsoleNotificationService());
 
         boolean result = service.transfer(from, to, 3000);
@@ -19,8 +19,8 @@ public class TransferServiceTest {
 
     @Test
     void failedTransferDoesNotChangeBalances() {
-        BankAccount from = new DebitAccount("1", "Иван", 1000);
-        BankAccount to = new DebitAccount("2", "Пётр", 2000);
+        BankAccount from = new DebitAccount("0000000001", "Иван", 1000);
+        BankAccount to = new DebitAccount("0000000002", "Пётр", 2000);
         TransferService service = new TransferService(new NoCommission(), new ConsoleNotificationService());
 
         boolean result = service.transfer(from, to, 2000);
@@ -32,8 +32,8 @@ public class TransferServiceTest {
 
     @Test
     void negativeTransferIsForbidden() {
-        BankAccount from = new DebitAccount("1", "Иван", 10000);
-        BankAccount to = new DebitAccount("2", "Пётр", 2000);
+        BankAccount from = new DebitAccount("0000000001", "Иван", 10000);
+        BankAccount to = new DebitAccount("0000000002", "Пётр", 2000);
         TransferService service = new TransferService(new NoCommission(), new ConsoleNotificationService());
 
         boolean result = service.transfer(from, to, -1000);
@@ -43,8 +43,8 @@ public class TransferServiceTest {
 
     @Test
     void zeroTransferIsForbidden() {
-        BankAccount from = new DebitAccount("1", "Иван", 10000);
-        BankAccount to = new DebitAccount("2", "Пётр", 2000);
+        BankAccount from = new DebitAccount("0000000001", "Иван", 10000);
+        BankAccount to = new DebitAccount("0000000002", "Пётр", 2000);
         TransferService service = new TransferService(new NoCommission(), new ConsoleNotificationService());
 
         boolean result = service.transfer(from, to, 0);
@@ -54,7 +54,7 @@ public class TransferServiceTest {
 
     @Test
     void cannotTransferToSameAccount() {
-        BankAccount account = new DebitAccount("1", "Иван", 10000);
+        BankAccount account = new DebitAccount("0000000001", "Иван", 10000);
         TransferService service = new TransferService(new NoCommission(), new ConsoleNotificationService());
 
         boolean result = service.transfer(account, account, 3000);
@@ -65,8 +65,8 @@ public class TransferServiceTest {
 
     @Test
     void commissionIsChargedFromSender() {
-        BankAccount from = new DebitAccount("1", "Иван", 10000);
-        BankAccount to = new DebitAccount("2", "Пётр", 2000);
+        BankAccount from = new DebitAccount("0000000001", "Иван", 10000);
+        BankAccount to = new DebitAccount("0000000002", "Пётр", 2000);
         TransferService service = new TransferService(new PercentCommission(10), new ConsoleNotificationService());
 
         boolean result = service.transfer(from, to, 3000);
@@ -77,8 +77,8 @@ public class TransferServiceTest {
 
     @Test
     void receiverGetsExactlyTransferAmount() {
-        BankAccount from = new DebitAccount("1", "Иван", 10000);
-        BankAccount to = new DebitAccount("2", "Пётр", 2000);
+        BankAccount from = new DebitAccount("0000000001", "Иван", 10000);
+        BankAccount to = new DebitAccount("0000000002", "Пётр", 2000);
         TransferService service = new TransferService(new PercentCommission(10), new ConsoleNotificationService());
 
         service.transfer(from, to, 3000);
@@ -88,8 +88,8 @@ public class TransferServiceTest {
 
     @Test
     void transferFailsWhenMoneyIsInsufficientIncludingCommission() {
-        BankAccount from = new DebitAccount("1", "Иван", 3000);
-        BankAccount to = new DebitAccount("2", "Пётр", 2000);
+        BankAccount from = new DebitAccount("0000000001", "Иван", 3000);
+        BankAccount to = new DebitAccount("0000000002", "Пётр", 2000);
         TransferService service = new TransferService(new PercentCommission(10), new ConsoleNotificationService());
 
         boolean result = service.transfer(from, to, 3000);
@@ -100,8 +100,8 @@ public class TransferServiceTest {
     }
     @Test
     void transferDebitToDebit() {
-        BankAccount from = new DebitAccount("1", "Иван", 10000);
-        BankAccount to = new DebitAccount("2", "Пётр", 2000);
+        BankAccount from = new DebitAccount("0000000001", "Иван", 10000);
+        BankAccount to = new DebitAccount("0000000002", "Пётр", 2000);
         TransferService service = new TransferService(new NoCommission(), new ConsoleNotificationService());
 
         boolean result = service.transfer(from, to, 3000);
@@ -113,8 +113,8 @@ public class TransferServiceTest {
 
     @Test
     void transferDebitToSavings() {
-        BankAccount from = new DebitAccount("1", "Иван", 10000);
-        BankAccount to = new SavingsAccount("2", "Пётр", 2000, 1000);
+        BankAccount from = new DebitAccount("0000000001", "Иван", 10000);
+        BankAccount to = new SavingsAccount("0000000002", "Пётр", 2000, 1000);
         TransferService service = new TransferService(new NoCommission(), new ConsoleNotificationService());
 
         boolean result = service.transfer(from, to, 3000);
@@ -126,8 +126,8 @@ public class TransferServiceTest {
 
     @Test
     void transferCreditToDebit() {
-        BankAccount from = new CreditAccount("1", "Иван", 1000, 5000);
-        BankAccount to = new DebitAccount("2", "Пётр", 2000);
+        BankAccount from = new CreditAccount("0000000001", "Иван", 1000, 5000);
+        BankAccount to = new DebitAccount("0000000002", "Пётр", 2000);
 
         TransferService service = new TransferService(new NoCommission(), new ConsoleNotificationService());
         boolean result = service.transfer(from, to, 3000);
@@ -139,8 +139,8 @@ public class TransferServiceTest {
 
     @Test
     void transferSavingsToDebit() {
-        BankAccount from = new SavingsAccount("1", "Иван", 10000, 1000);
-        BankAccount to = new DebitAccount("2", "Пётр", 2000);
+        BankAccount from = new SavingsAccount("0000000001", "Иван", 10000, 1000);
+        BankAccount to = new DebitAccount("0000000002", "Пётр", 2000);
 
         TransferService service = new TransferService(new NoCommission(), new ConsoleNotificationService());
         boolean result = service.transfer(from, to, 3000);
@@ -151,8 +151,8 @@ public class TransferServiceTest {
     }
     @Test
     void successfulTransferSendsOneNotification() {
-        BankAccount from = new DebitAccount("1", "Иван", 10000);
-        BankAccount to = new DebitAccount("2", "Пётр", 2000);
+        BankAccount from = new DebitAccount("0000000001", "Иван", 10000);
+        BankAccount to = new DebitAccount("0000000002", "Пётр", 2000);
 
         FakeNotificationService notificationService = new FakeNotificationService();
         TransferService service = new TransferService(new NoCommission(), notificationService);
@@ -165,8 +165,8 @@ public class TransferServiceTest {
 
     @Test
     void failedTransferDoesNotSendNotification() {
-        BankAccount from = new DebitAccount("1", "Иван", 1000);
-        BankAccount to = new DebitAccount("2", "Пётр", 2000);
+        BankAccount from = new DebitAccount("0000000001", "Иван", 1000);
+        BankAccount to = new DebitAccount("0000000002", "Пётр", 2000);
 
         FakeNotificationService notificationService = new FakeNotificationService();
         TransferService service = new TransferService(new NoCommission(), notificationService);
@@ -179,8 +179,8 @@ public class TransferServiceTest {
 
     @Test
     void notificationMessageIsCorrect() {
-        BankAccount from = new DebitAccount("1", "Иван", 10000);
-        BankAccount to = new DebitAccount("2", "Пётр", 2000);
+        BankAccount from = new DebitAccount("0000000001", "Иван", 10000);
+        BankAccount to = new DebitAccount("0000000002", "Пётр", 2000);
 
         FakeNotificationService notificationService = new FakeNotificationService();
         TransferService service = new TransferService(new NoCommission(), notificationService);

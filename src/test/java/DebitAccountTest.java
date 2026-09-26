@@ -7,7 +7,7 @@ public class DebitAccountTest {
     @Test
     void initialBalanceIsSaved() {
         DebitAccount account =
-                new DebitAccount("1", "Иван", 10000);
+                new DebitAccount("0000000001", "Иван", 10000);
 
         assertEquals(10000, account.getBalance());
     }
@@ -15,7 +15,7 @@ public class DebitAccountTest {
     @Test
     void depositIncreasesBalance() {
         DebitAccount account =
-                new DebitAccount("1", "Иван", 10000);
+                new DebitAccount("0000000001", "Иван", 10000);
 
         account.deposit(3000);
 
@@ -25,7 +25,7 @@ public class DebitAccountTest {
     @Test
     void zeroDepositDoesNotChangeBalance() {
         DebitAccount account =
-                new DebitAccount("1", "Иван", 10000);
+                new DebitAccount("0000000001", "Иван", 10000);
 
         account.deposit(0);
 
@@ -35,7 +35,7 @@ public class DebitAccountTest {
     @Test
     void negativeDepositDoesNotChangeBalance() {
         DebitAccount account =
-                new DebitAccount("1", "Иван", 10000);
+                new DebitAccount("0000000001", "Иван", 10000);
 
         account.deposit(-500);
 
@@ -45,7 +45,7 @@ public class DebitAccountTest {
     @Test
     void withdrawDecreasesBalance() {
         DebitAccount account =
-                new DebitAccount("1", "Иван", 10000);
+                new DebitAccount("0000000001", "Иван", 10000);
 
         boolean result = account.withdraw(3000);
 
@@ -56,7 +56,7 @@ public class DebitAccountTest {
     @Test
     void cannotWithdrawMoreThanBalance() {
         DebitAccount account =
-                new DebitAccount("1", "Иван", 10000);
+                new DebitAccount("0000000001", "Иван", 10000);
 
         boolean result = account.withdraw(15000);
 
@@ -67,7 +67,7 @@ public class DebitAccountTest {
     @Test
     void zeroWithdrawIsForbidden() {
         DebitAccount account =
-                new DebitAccount("1", "Иван", 10000);
+                new DebitAccount("0000000001", "Иван", 10000);
 
         boolean result = account.withdraw(0);
 
@@ -78,7 +78,7 @@ public class DebitAccountTest {
     @Test
     void negativeWithdrawIsForbidden() {
         DebitAccount account =
-                new DebitAccount("1", "Иван", 10000);
+                new DebitAccount("0000000001", "Иван", 10000);
 
         boolean result = account.withdraw(-500);
 

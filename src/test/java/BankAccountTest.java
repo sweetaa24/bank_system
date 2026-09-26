@@ -7,10 +7,10 @@ public class BankAccountTest {
     @Test
     void accountsWithSameNumberAreEqual() {
         BankAccount debit =
-                new DebitAccount("001", "Ivan", 10000);
+                new DebitAccount("0000000001", "Ivan", 10000);
 
         BankAccount savings =
-                new SavingsAccount("001", "Petr", 5000, 1000);
+                new SavingsAccount("0000000001", "Petr", 5000, 1000);
 
         assertEquals(debit, savings);
     }
@@ -18,10 +18,10 @@ public class BankAccountTest {
     @Test
     void accountsWithDifferentNumbersAreNotEqual() {
         BankAccount first =
-                new DebitAccount("001", "Ivan", 10000);
+                new DebitAccount("0000000001", "Ivan", 10000);
 
         BankAccount second =
-                new DebitAccount("002", "Ivan", 10000);
+                new DebitAccount("0000000002", "Ivan", 10000);
 
         assertNotEquals(first, second);
     }
@@ -29,7 +29,7 @@ public class BankAccountTest {
     @Test
     void accountEqualsItself() {
         BankAccount account =
-                new DebitAccount("001", "Ivan", 10000);
+                new DebitAccount("0000000001", "Ivan", 10000);
 
         assertEquals(account, account);
     }
@@ -37,7 +37,7 @@ public class BankAccountTest {
     @Test
     void accountDoesNotEqualNull() {
         BankAccount account =
-                new DebitAccount("001", "Ivan", 10000);
+                new DebitAccount("0000000001", "Ivan", 10000);
 
         assertNotEquals(account, null);
     }
@@ -46,10 +46,10 @@ public class BankAccountTest {
     @Test
     void equalAccountsHaveSameHashCode() {
         BankAccount debit =
-                new DebitAccount("001", "Ivan", 10000);
+                new DebitAccount("0000000001", "Ivan", 10000);
 
         BankAccount savings =
-                new SavingsAccount("001", "Petr", 5000, 1000);
+                new SavingsAccount("0000000001", "Petr", 5000, 1000);
 
         assertEquals(debit.hashCode(), savings.hashCode());
     }
