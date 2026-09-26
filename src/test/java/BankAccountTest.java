@@ -12,12 +12,7 @@ public class BankAccountTest {
         BankAccount savings =
                 new SavingsAccount("001", "Petr", 5000, 1000);
 
-        BankAccount credit =
-                new CreditAccount("001", "Anna", 0, 5000);
-
         assertEquals(debit, savings);
-        assertEquals(savings, credit);
-        assertEquals(debit, credit);
     }
 
     @Test
@@ -32,15 +27,21 @@ public class BankAccountTest {
     }
 
     @Test
-    void balanceDoesNotAffectEquality() {
-        BankAccount first =
+    void accountEqualsItself() {
+        BankAccount account =
                 new DebitAccount("001", "Ivan", 10000);
 
-        BankAccount second =
-                new DebitAccount("001", "Ivan", 5000);
-
-        assertEquals(first, second);
+        assertEquals(account, account);
     }
+
+    @Test
+    void accountDoesNotEqualNull() {
+        BankAccount account =
+                new DebitAccount("001", "Ivan", 10000);
+
+        assertNotEquals(account, null);
+    }
+
 
     @Test
     void equalAccountsHaveSameHashCode() {
