@@ -10,9 +10,8 @@ public class TransferServiceTest {
         BankAccount to = new DebitAccount("0000000002", "Пётр", 2000);
         TransferService service = new TransferService(new NoCommission(), new ConsoleNotificationService());
 
-        boolean result = service.transfer(from, to, 3000);
+        service.transfer(from, to, 3000);
 
-        assertTrue(result);
         assertEquals(7000, from.getBalance());
         assertEquals(5000, to.getBalance());
     }
@@ -61,9 +60,11 @@ public class TransferServiceTest {
         BankAccount account = new DebitAccount("0000000001", "Иван", 10000);
         TransferService service = new TransferService(new NoCommission(), new ConsoleNotificationService());
 
-        boolean result = service.transfer(account, account, 3000);
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> service.transfer(account, account, 1000)
+        );
 
-        assertFalse(result);
         assertEquals(10000, account.getBalance());
     }
 
@@ -73,9 +74,7 @@ public class TransferServiceTest {
         BankAccount to = new DebitAccount("0000000002", "Пётр", 2000);
         TransferService service = new TransferService(new PercentCommission(10), new ConsoleNotificationService());
 
-        boolean result = service.transfer(from, to, 3000);
-
-        assertTrue(result);
+        service.transfer(from, to, 3000);
         assertEquals(6700, from.getBalance());
     }
 
@@ -110,9 +109,7 @@ public class TransferServiceTest {
         BankAccount to = new DebitAccount("0000000002", "Пётр", 2000);
         TransferService service = new TransferService(new NoCommission(), new ConsoleNotificationService());
 
-        boolean result = service.transfer(from, to, 3000);
-
-        assertTrue(result);
+        service.transfer(from, to, 3000);
         assertEquals(7000, from.getBalance());
         assertEquals(5000, to.getBalance());
     }
@@ -123,9 +120,7 @@ public class TransferServiceTest {
         BankAccount to = new SavingsAccount("0000000002", "Пётр", 2000, 1000);
         TransferService service = new TransferService(new NoCommission(), new ConsoleNotificationService());
 
-        boolean result = service.transfer(from, to, 3000);
-
-        assertTrue(result);
+        service.transfer(from, to, 3000);
         assertEquals(7000, from.getBalance());
         assertEquals(5000, to.getBalance());
     }
@@ -136,9 +131,7 @@ public class TransferServiceTest {
         BankAccount to = new DebitAccount("0000000002", "Пётр", 2000);
 
         TransferService service = new TransferService(new NoCommission(), new ConsoleNotificationService());
-        boolean result = service.transfer(from, to, 3000);
-
-        assertTrue(result);
+        service.transfer(from, to, 3000);
         assertEquals(-2000, from.getBalance());
         assertEquals(5000, to.getBalance());
     }
@@ -149,9 +142,9 @@ public class TransferServiceTest {
         BankAccount to = new DebitAccount("0000000002", "Пётр", 2000);
 
         TransferService service = new TransferService(new NoCommission(), new ConsoleNotificationService());
-        boolean result = service.transfer(from, to, 3000);
 
-        assertTrue(result);
+        service.transfer(from, to, 3000);
+
         assertEquals(7000, from.getBalance());
         assertEquals(5000, to.getBalance());
     }
@@ -163,9 +156,7 @@ public class TransferServiceTest {
         FakeNotificationService notificationService = new FakeNotificationService();
         TransferService service = new TransferService(new NoCommission(), notificationService);
 
-        boolean result = service.transfer(from, to, 3000);
-
-        assertTrue(result);
+        service.transfer(from, to, 3000);
         assertEquals(1, notificationService.getNotificationCount());
     }
 
@@ -196,4 +187,27 @@ public class TransferServiceTest {
         service.transfer(from, to, 3000);
 
         assertEquals("Transfer 3000.0", notificationService.getLastMessage());}
+
+    @Test
+    void transferOverLimitIsForbidden() {
+        BankAccount from = new DebitAccount(
+                "1234567890", "Иван", 100000
+        );
+        BankAccount to = new DebitAccount(
+                "0987654321", "Анна", 1000
+        );
+
+        TransferService service = new TransferService(
+                new NoCommission(),
+                new FakeNotificationService()
+        );
+
+        assertThrows(
+                TransferLimitExceededException.class,
+                () -> service.transfer(from, to, 50001)
+        );
+
+        assertEquals(100000, from.getBalance());
+        assertEquals(1000, to.getBalance());
+    }
 }

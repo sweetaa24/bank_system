@@ -7,7 +7,7 @@ public class TransferService {
         this.notificationService = notificationService;
     }
 
-    public boolean transfer(
+    public void transfer(
             BankAccount from,
             BankAccount to,
             double amount) {
@@ -19,7 +19,15 @@ public class TransferService {
         }
 
         if (from.equals(to)) {
-            return false;
+            throw new IllegalArgumentException(
+                    "Cannot transfer to the same account"
+            );
+        }
+
+        if (amount > 50_000) {
+            throw new TransferLimitExceededException(
+                    "Transfer limit exceeded"
+            );
         }
 
         double commission = commissionPolicy.calculate(amount);
@@ -31,7 +39,5 @@ public class TransferService {
         notificationService.notify(
                 "Transfer " + amount
         );
-
-        return true;
     }
 }
