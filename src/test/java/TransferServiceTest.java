@@ -20,11 +20,11 @@ public class TransferServiceTest {
     void failedTransferDoesNotChangeBalances() {
         BankAccount from = new DebitAccount("0000000001", "Иван", 1000);
         BankAccount to = new DebitAccount("0000000002", "Пётр", 2000);
-        TransferService service = new TransferService(new NoCommission(), new ConsoleNotificationService());
+        TransferService service = new TransferService(new NoCommission(), new FakeNotificationService());
 
         assertThrows(
                 InsufficientFundsException.class,
-                () -> service.transfer(from, to, 2000)
+                () -> service.transfer(from, to, 5000)
         );
 
         assertEquals(1000, from.getBalance());
