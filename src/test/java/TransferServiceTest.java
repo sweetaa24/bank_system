@@ -189,7 +189,7 @@ public class TransferServiceTest {
         assertEquals("Transfer 3000.0", notificationService.getLastMessage());}
 
     @Test
-    void transferOverLimitIsForbidden() {
+    void transferOverLimitThrowsException() {
         BankAccount from = new DebitAccount(
                 "1234567890", "Иван", 100000
         );
@@ -209,5 +209,29 @@ public class TransferServiceTest {
 
         assertEquals(100000, from.getBalance());
         assertEquals(1000, to.getBalance());
+    }
+
+    @Test
+    void transferWithoutEnoughMoneyThrowsException() {
+        BankAccount from = new DebitAccount(
+                "1234567890", "Иван", 1000
+        );
+        BankAccount to = new DebitAccount(
+                "0987654321", "Анна", 500
+        );
+
+        TransferService service = new TransferService(
+                new NoCommission(),
+                new FakeNotificationService()
+        );
+
+        InsufficientFundsException ex = assertThrows(
+                InsufficientFundsException.class,
+                () -> service.transfer(from, to, 5000)
+        );
+
+        assertEquals("Insufficient funds", ex.getMessage());
+        assertEquals(1000, from.getBalance());
+        assertEquals(500, to.getBalance());
     }
 }
