@@ -9,9 +9,7 @@ public class CreditAccountTest {
         CreditAccount account =
                 new CreditAccount("0000000001", "Иван", 1000, 5000);
 
-        boolean result = account.withdraw(2000);
-
-        assertTrue(result);
+        account.withdraw(2000);
         assertEquals(-1000, account.getBalance());
     }
 
@@ -20,9 +18,7 @@ public class CreditAccountTest {
         CreditAccount account =
                 new CreditAccount("0000000001", "Иван", 1000, 5000);
 
-        boolean result = account.withdraw(6000);
-
-        assertTrue(result);
+        account.withdraw(6000);
         assertEquals(-5000, account.getBalance());
     }
 
@@ -31,9 +27,8 @@ public class CreditAccountTest {
         CreditAccount account =
                 new CreditAccount("0000000001", "Иван", 1000, 5000);
 
-        boolean result = account.withdraw(6001);
+        assertThrows(InsufficientFundsException.class, () -> account.withdraw(6001));
 
-        assertFalse(result);
         assertEquals(1000, account.getBalance());
     }
 
@@ -42,8 +37,22 @@ public class CreditAccountTest {
         CreditAccount account =
                 new CreditAccount("0000000001", "Иван", 1000, 5000);
 
-        account.withdraw(6001);
+        assertThrows(InsufficientFundsException.class, () -> account.withdraw(6001));
 
         assertEquals(1000, account.getBalance());
+    }
+
+    @Test
+    void zeroWithdrawIsRejected() {
+        CreditAccount account = new CreditAccount("0000000001", "Иван", 1000, 5000);
+
+        assertThrows(IllegalArgumentException.class, () -> account.withdraw(0));
+    }
+
+    @Test
+    void negativeWithdrawIsRejected() {
+        CreditAccount account = new CreditAccount("0000000001", "Иван", 1000, 5000);
+        assertThrows(IllegalArgumentException.class, () -> account.withdraw(-500));
+
     }
 }

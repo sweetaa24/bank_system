@@ -9,9 +9,8 @@ public class SavingAccountTest {
         SavingsAccount account =
                 new SavingsAccount("0000000001", "Иван", 10000, 1000);
 
-        boolean result = account.withdraw(9000);
+        account.withdraw(9000);
 
-        assertTrue(result);
         assertEquals(1000, account.getBalance());
     }
 
@@ -20,9 +19,11 @@ public class SavingAccountTest {
         SavingsAccount account =
                 new SavingsAccount("0000000001", "Иван", 10000, 1000);
 
-        boolean result = account.withdraw(9500);
+        assertThrows(
+                InsufficientFundsException.class,
+                () -> account.withdraw(9500)
+        );
 
-        assertFalse(result);
         assertEquals(10000, account.getBalance());
     }
 
@@ -31,8 +32,33 @@ public class SavingAccountTest {
         SavingsAccount account =
                 new SavingsAccount("0000000001", "Иван", 10000, 1000);
 
-        account.withdraw(9500);
+        assertThrows(
+                InsufficientFundsException.class,
+                () -> account.withdraw(9500)
+        );
 
         assertEquals(10000, account.getBalance());
+    }
+
+    @Test
+    void zeroWithdrawIsRejected() {
+        SavingsAccount account =
+                new SavingsAccount("0000000001", "Иван", 10000, 1000);
+
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> account.withdraw(0)
+        );
+    }
+
+    @Test
+    void negativeWithdrawIsRejected() {
+        SavingsAccount account =
+                new SavingsAccount("0000000001", "Иван", 10000, 1000);
+
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> account.withdraw(-500)
+        );
     }
 }

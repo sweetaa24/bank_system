@@ -7,11 +7,19 @@ public class CreditAccount extends BankAccount{
     }
 
     @Override
-    public boolean withdraw(double amount){
-        if (getBalance() - amount < -creditLimit){
-            return false;
+    public void withdraw(double amount) {
+        if (amount <= 0) {
+            throw new IllegalArgumentException(
+                    "Amount must be positive"
+            );
         }
+
+        if (getBalance() - amount < -creditLimit) {
+            throw new InsufficientFundsException(
+                    "Insufficient funds"
+            );
+        }
+
         decreaseBalance(amount);
-        return true;
     }
 }

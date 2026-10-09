@@ -27,9 +27,8 @@ public class DebitAccountTest {
         DebitAccount account =
                 new DebitAccount("0000000001", "Иван", 10000);
 
-        boolean result = account.withdraw(3000);
+        account.withdraw(3000);
 
-        assertTrue(result);
         assertEquals(7000, account.getBalance());
     }
 
@@ -38,9 +37,11 @@ public class DebitAccountTest {
         DebitAccount account =
                 new DebitAccount("0000000001", "Иван", 10000);
 
-        boolean result = account.withdraw(15000);
+        assertThrows(
+                InsufficientFundsException.class,
+                () -> account.withdraw(15000)
+        );
 
-        assertFalse(result);
         assertEquals(10000, account.getBalance());
     }
 
@@ -49,9 +50,11 @@ public class DebitAccountTest {
         DebitAccount account =
                 new DebitAccount("0000000001", "Иван", 10000);
 
-        boolean result = account.withdraw(0);
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> account.withdraw(0)
+        );
 
-        assertFalse(result);
         assertEquals(10000, account.getBalance());
     }
 
@@ -60,11 +63,14 @@ public class DebitAccountTest {
         DebitAccount account =
                 new DebitAccount("0000000001", "Иван", 10000);
 
-        boolean result = account.withdraw(-500);
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> account.withdraw(-500)
+        );
 
-        assertFalse(result);
         assertEquals(10000, account.getBalance());
     }
+
     @Test
     void negativeDepositThrowsException() {
         BankAccount account =

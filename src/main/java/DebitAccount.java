@@ -4,11 +4,19 @@ public class DebitAccount extends BankAccount{
     }
 
     @Override
-    public boolean withdraw(double amount){
-        if (!canWithdraw(amount)) {
-            return false;
+    public void withdraw(double amount) {
+        if (amount <= 0) {
+            throw new IllegalArgumentException(
+                    "Amount must be positive"
+            );
         }
+
+        if (amount > getBalance()) {
+            throw new InsufficientFundsException(
+                    "Insufficient funds"
+            );
+        }
+
         decreaseBalance(amount);
-        return true;
     }
 }
