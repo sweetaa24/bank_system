@@ -25,4 +25,12 @@ public class AccountUtils {
                 "0987654321", "Anna", 2000
         ));
     }
+    public static <T> void copy(
+            List<? extends T> source,
+            List<? super T> target) {
+
+        for (T value : source) {
+            target.add(value);
+        }
+    }
 }
