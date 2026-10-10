@@ -24,6 +24,9 @@ public class Main {
         }
 
         System.out.println(from.getId());
+
+        Repository<AccountNumber, BankAccount> accounts;
+        Repository<Long, Transaction> transactions;
 //
 //        System.out.println("Sender balance: " + from.getBalance());
 //        System.out.println("Receiver balance: " + to.getBalance());
