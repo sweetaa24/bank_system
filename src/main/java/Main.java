@@ -13,7 +13,8 @@ public class Main {
 
         TransferService transferService = new TransferService(
                 new NoCommission(),
-                new ConsoleNotificationService()
+                new ConsoleNotificationService(),
+                new BlockedAccountRegistry()
         );
 
         try {

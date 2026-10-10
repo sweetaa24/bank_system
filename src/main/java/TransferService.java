@@ -1,16 +1,22 @@
 public class TransferService {
     private final CommissionPolicy commissionPolicy;
     private final NotificationService notificationService;
+    private final BlockedAccountRegistry blockedAccounts;
 
-    public TransferService(CommissionPolicy commissionPolicy, NotificationService notificationService) {
+    public TransferService(CommissionPolicy commissionPolicy, NotificationService notificationService, BlockedAccountRegistry blockedAccounts) {
         this.commissionPolicy = commissionPolicy;
         this.notificationService = notificationService;
+        this.blockedAccounts = blockedAccounts;
     }
 
     public void transfer(
             BankAccount from,
             BankAccount to,
             double amount) {
+
+        if (blockedAccounts.isBlocked(from.getId())) {
+            throw new IllegalStateException("Source account is blocked");
+        }
 
         if (amount <= 0) {
             throw new IllegalArgumentException(
