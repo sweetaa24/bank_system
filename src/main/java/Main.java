@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.List;
+
 public class Main {
     public static void main(String[] args) {
         BankAccount from = new DebitAccount(
@@ -25,8 +28,12 @@ public class Main {
 
         System.out.println(from.getId());
 
-        Repository<AccountNumber, BankAccount> accounts;
-        Repository<Long, Transaction> transactions;
+//        Repository<AccountNumber, BankAccount> accounts;
+//        Repository<Long, Transaction> transactions;
+
+        List<DebitAccount> debitAccounts = new ArrayList<>();
+
+        List<? extends BankAccount> accounts = debitAccounts;
 //
 //        System.out.println("Sender balance: " + from.getBalance());
 //        System.out.println("Receiver balance: " + to.getBalance());
