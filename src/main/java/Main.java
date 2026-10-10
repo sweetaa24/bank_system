@@ -31,9 +31,20 @@ public class Main {
 //        Repository<AccountNumber, BankAccount> accounts;
 //        Repository<Long, Transaction> transactions;
 
+//        List<DebitAccount> debitAccounts = new ArrayList<>();
+//        List<? extends BankAccount> accounts = debitAccounts;
+
         List<DebitAccount> debitAccounts = new ArrayList<>();
 
-        List<? extends BankAccount> accounts = debitAccounts;
+        debitAccounts.add(new DebitAccount(
+                "1234567890", "Ivan", 1000
+        ));
+
+        debitAccounts.add(new DebitAccount(
+                "0987654321", "Anna", 2000
+        ));
+
+        System.out.println(AccountUtils.totalBalance(debitAccounts));
 //
 //        System.out.println("Sender balance: " + from.getBalance());
 //        System.out.println("Receiver balance: " + to.getBalance());
