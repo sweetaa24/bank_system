@@ -1,4 +1,5 @@
-public abstract class BankAccount {
+public abstract class BankAccount
+        implements Identifiable<AccountNumber>{
     private final AccountNumber number;
     private final String owner;
     private double balance;
@@ -11,6 +12,11 @@ public abstract class BankAccount {
         } else {
             this.balance = 0;
         }
+    }
+
+    @Override
+    public AccountNumber getId() {
+        return number;
     }
 
     public void deposit(double amount){
