@@ -33,4 +33,24 @@ public class AccountUtils {
             target.add(value);
         }
     }
+
+    public static <T extends BankAccount> T richest(
+            List<T> accounts) {
+
+        if (accounts.isEmpty()) {
+            throw new IllegalArgumentException(
+                    "Account list cannot be empty"
+            );
+        }
+
+        T richest = accounts.get(0);
+
+        for (T account : accounts) {
+            if (account.getBalance() > richest.getBalance()) {
+                richest = account;
+            }
+        }
+
+        return richest;
+    }
 }

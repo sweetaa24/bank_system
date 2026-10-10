@@ -67,4 +67,54 @@ public class AccountUtilsTest {
             assertSame(source.get(i), target.get(i));
         }
     }
+
+    @Test
+    void richestReturnsAccountWithMaximumBalance() {
+        List<DebitAccount> accounts = List.of(
+                new DebitAccount("1234567890", "Ivan", 1000),
+                new DebitAccount("1234567891", "Anna", 5000),
+                new DebitAccount("1234567892", "Petr", 3000)
+        );
+
+        DebitAccount result = AccountUtils.richest(accounts);
+
+        assertEquals(5000, result.getBalance());
+    }
+
+    @Test
+    void richestReturnsOnlyAccount() {
+        DebitAccount account = new DebitAccount(
+                "1234567890", "Ivan", 1000
+        );
+
+        DebitAccount result = AccountUtils.richest(
+                List.of(account)
+        );
+
+        assertSame(account, result);
+    }
+
+    @Test
+    void richestReturnsFirstAccountWhenBalancesAreEqual() {
+        DebitAccount first = new DebitAccount(
+                "1234567890", "Ivan", 5000
+        );
+        DebitAccount second = new DebitAccount(
+                "1234567891", "Anna", 5000
+        );
+
+        DebitAccount result = AccountUtils.richest(
+                List.of(first, second)
+        );
+
+        assertSame(first, result);
+    }
+
+    @Test
+    void richestThrowsExceptionForEmptyList() {
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> AccountUtils.richest(List.<DebitAccount>of())
+        );
+    }
 }
