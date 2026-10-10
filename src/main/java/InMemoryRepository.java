@@ -1,13 +1,11 @@
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class InMemoryRepository<
         ID,
         T extends Identifiable<ID>>
         implements Repository<ID, T> {
 
-    private final List<T> values = new ArrayList<>();
+    private final Map<ID, T> values = new HashMap<>();
 
     @Override
     public void save(T value) {
@@ -16,32 +14,27 @@ public class InMemoryRepository<
                     "Value cannot be null"
             );
         }
-
-        for (int i = 0; i < values.size(); i++) {
-            if (Objects.equals(
-                    values.get(i).getId(), value.getId())) {
-                values.set(i, value);
-                return;
-            }
-        }
-
-        values.add(value);
+        values.put(value.getId(), value);
     }
 
     @Override
     public T findById(ID id) {
-        for (T value : values) {
-            if (Objects.equals(value.getId(), id)) {
-                return value;
-            }
-        }
-
-        return null;
+        return values.get(id);
     }
 
     @Override
     public boolean existsById(ID id) {
-        return findById(id) != null;
+        return values.containsKey(id);
+    }
+
+    @Override
+    public boolean deleteById(ID id) {
+        return values.remove(id) != null;
+    }
+
+    @Override
+    public List<T> findAll() {
+        return new ArrayList<>(values.values());
     }
 
     @Override

@@ -52,14 +52,14 @@ public class Main {
 //
 //        System.out.println(accounts.size());
 
-        List<String> strings = new ArrayList<>();
-        List<Integer> numbers = new ArrayList<>();
-
-        System.out.println(strings.getClass());
-        System.out.println(numbers.getClass());
-        System.out.println(
-                strings.getClass() == numbers.getClass()
-        );
+//        List<String> strings = new ArrayList<>();
+//        List<Integer> numbers = new ArrayList<>();
+//
+//        System.out.println(strings.getClass());
+//        System.out.println(numbers.getClass());
+//        System.out.println(
+//                strings.getClass() == numbers.getClass()
+//        );
 //
 //        System.out.println("Sender balance: " + from.getBalance());
 //        System.out.println("Receiver balance: " + to.getBalance());
