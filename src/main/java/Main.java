@@ -11,10 +11,13 @@ public class Main {
                 "0987654321", "Анна", 2000
         );
 
+        TransactionJournal journal = new TransactionJournal();
+
         TransferService transferService = new TransferService(
                 new NoCommission(),
                 new ConsoleNotificationService(),
-                new BlockedAccountRegistry()
+                new BlockedAccountRegistry(),
+                journal
         );
 
         try {

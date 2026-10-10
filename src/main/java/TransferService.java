@@ -1,12 +1,23 @@
+import java.util.concurrent.atomic.AtomicLong;
+
 public class TransferService {
     private final CommissionPolicy commissionPolicy;
     private final NotificationService notificationService;
     private final BlockedAccountRegistry blockedAccounts;
+    private final TransactionJournal journal;
 
-    public TransferService(CommissionPolicy commissionPolicy, NotificationService notificationService, BlockedAccountRegistry blockedAccounts) {
+    private static final AtomicLong TRANSACTION_IDS = new AtomicLong(1);
+
+    public TransferService(
+            CommissionPolicy commissionPolicy,
+            NotificationService notificationService,
+            BlockedAccountRegistry blockedAccounts,
+            TransactionJournal journal
+    ) {
         this.commissionPolicy = commissionPolicy;
         this.notificationService = notificationService;
         this.blockedAccounts = blockedAccounts;
+        this.journal = journal;
     }
 
     public void transfer(
@@ -41,6 +52,14 @@ public class TransferService {
 
         from.withdraw(totalAmount);
         to.deposit(amount);
+
+        journal.add(new Transaction(
+                TRANSACTION_IDS.getAndIncrement(),
+                TransactionType.TRANSFER,
+                from.getId(),
+                amount,
+                TransactionStatus.SUCCESS
+        ));
 
         notificationService.notify(
                 "Transfer " + amount
