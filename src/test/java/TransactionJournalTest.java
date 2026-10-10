@@ -1,8 +1,5 @@
-
 import org.junit.jupiter.api.Test;
-
 import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class TransactionJournalTest {
@@ -71,4 +68,52 @@ class TransactionJournalTest {
 
         assertEquals(1, journal.size());
     }
+
+
+    @Test
+    void removeRejectedDeletesOnlyRejectedTransactions() {
+        TransactionJournal journal = new TransactionJournal();
+
+        Transaction success = new Transaction(
+                1L, TransactionType.TRANSFER,
+                new AccountNumber("0000000001"),
+                100, TransactionStatus.SUCCESS
+        );
+
+        Transaction rejected = new Transaction(
+                2L, TransactionType.TRANSFER,
+                new AccountNumber("0000000002"),
+                200, TransactionStatus.REJECTED
+        );
+
+        journal.add(success);
+        journal.add(rejected);
+
+        journal.removeRejected();
+
+        assertEquals(1, journal.size());
+        assertEquals(success, journal.findAll().get(0));
+    }
+
+    @Test
+    void removeRejectedDeletesAllRejectedTransactions() {
+        TransactionJournal journal = new TransactionJournal();
+
+        journal.add(new Transaction(
+                1L, TransactionType.TRANSFER,
+                new AccountNumber("0000000001"),
+                100, TransactionStatus.REJECTED
+        ));
+
+        journal.add(new Transaction(
+                2L, TransactionType.TRANSFER,
+                new AccountNumber("0000000002"),
+                200, TransactionStatus.REJECTED
+        ));
+
+        journal.removeRejected();
+
+        assertEquals(0, journal.size());
+    }
+
 }
