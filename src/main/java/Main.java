@@ -44,13 +44,22 @@ public class Main {
                 "0987654321", "Anna", 2000
         ));
 
-        System.out.println(AccountUtils.totalBalance(debitAccounts));
+//        System.out.println(AccountUtils.totalBalance(debitAccounts));
+//
+//        List<BankAccount> accounts = new ArrayList<>();
+//
+//        AccountUtils.addDemoDebitAccounts(accounts);
+//
+//        System.out.println(accounts.size());
 
-        List<BankAccount> accounts = new ArrayList<>();
+        List<String> strings = new ArrayList<>();
+        List<Integer> numbers = new ArrayList<>();
 
-        AccountUtils.addDemoDebitAccounts(accounts);
-
-        System.out.println(accounts.size());
+        System.out.println(strings.getClass());
+        System.out.println(numbers.getClass());
+        System.out.println(
+                strings.getClass() == numbers.getClass()
+        );
 //
 //        System.out.println("Sender balance: " + from.getBalance());
 //        System.out.println("Receiver balance: " + to.getBalance());
