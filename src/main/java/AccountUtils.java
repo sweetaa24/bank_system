@@ -13,4 +13,16 @@ public class AccountUtils {
 
         return total;
     }
+
+    public static void addDemoDebitAccounts(
+            List<? super DebitAccount> target) {
+
+        target.add(new DebitAccount(
+                "1234567890", "Ivan", 1000
+        ));
+
+        target.add(new DebitAccount(
+                "0987654321", "Anna", 2000
+        ));
+    }
 }

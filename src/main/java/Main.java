@@ -45,6 +45,12 @@ public class Main {
         ));
 
         System.out.println(AccountUtils.totalBalance(debitAccounts));
+
+        List<BankAccount> accounts = new ArrayList<>();
+
+        AccountUtils.addDemoDebitAccounts(accounts);
+
+        System.out.println(accounts.size());
 //
 //        System.out.println("Sender balance: " + from.getBalance());
 //        System.out.println("Receiver balance: " + to.getBalance());
