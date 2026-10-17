@@ -30,5 +30,19 @@ public class TransactionJournal {
         }
     }
 
+
+    public List<Transaction> findByAccount(AccountNumber number) {
+        List<Transaction> result = new ArrayList<>();
+
+        for (Transaction tx : transactions) {
+            if (tx.account().equals(number)) {
+                result.add(tx);
+            }
+        }
+
+        return result;
+    }
+
+
 }
 
