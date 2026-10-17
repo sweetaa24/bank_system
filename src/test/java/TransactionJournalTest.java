@@ -116,4 +116,25 @@ class TransactionJournalTest {
         assertEquals(0, journal.size());
     }
 
+    @Test
+    void addedTransactionIsAvailableInJournalAndIndex() {
+        AccountNumber number = new AccountNumber("1111111111");
+        Transaction tx = new Transaction(
+                1L,
+                TransactionType.TRANSFER,
+                number,
+                100,
+                TransactionStatus.SUCCESS
+        );
+
+        TransactionJournal journal = new TransactionJournal();
+        journal.add(tx);
+
+        assertEquals(1, journal.findAll().size());
+        assertEquals(tx, journal.findAll().get(0));
+        assertEquals(1, journal.findByAccount(
+                new AccountNumber("1111111111")
+        ).size());
+    }
+
 }

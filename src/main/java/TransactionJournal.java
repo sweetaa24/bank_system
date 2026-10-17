@@ -4,11 +4,12 @@ import java.util.List;
 
 public class TransactionJournal {
     private final List<Transaction> transactions = new ArrayList<>();
+    private final TransactionIndex index = new TransactionIndex();
 
     public void add(Transaction transaction) {
+        index.add(transaction);
         transactions.add(transaction);
     }
-
     public List<Transaction> findAll() {
         return new ArrayList<>(transactions);
     }
@@ -28,19 +29,13 @@ public class TransactionJournal {
                 iterator.remove();
             }
         }
+
+        index.clearRejected();
     }
 
 
     public List<Transaction> findByAccount(AccountNumber number) {
-        List<Transaction> result = new ArrayList<>();
-
-        for (Transaction tx : transactions) {
-            if (tx.account().equals(number)) {
-                result.add(tx);
-            }
-        }
-
-        return result;
+        return index.findByAccount(number);
     }
 
 
