@@ -24,4 +24,23 @@ public class BankService {
     public boolean closeAccount(AccountNumber number) {
         return accounts.deleteById(number);
     }
+
+    public void transfer(
+            AccountNumber fromNumber,
+            AccountNumber toNumber,
+            double amount) {
+
+        BankAccount from = accounts.findById(fromNumber);
+        BankAccount to = accounts.findById(toNumber);
+
+        if (from == null) {
+            throw new IllegalArgumentException("Sender account not found");
+        }
+
+        if (to == null) {
+            throw new IllegalArgumentException("Recipient account not found");
+        }
+
+        transferService.transfer(from, to, amount);
+    }
 }

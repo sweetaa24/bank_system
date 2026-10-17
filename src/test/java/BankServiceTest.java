@@ -70,4 +70,89 @@ class BankServiceTest {
                 () -> bankService.openAccount(null)
         );
     }
+
+
+    @Test
+    void transferFailsWhenSenderDoesNotExist() {
+        BankAccount to = new DebitAccount(
+                "2222222222", "Petr", 2000
+        );
+        bankService.openAccount(to);
+
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> bankService.transfer(
+                        new AccountNumber("1111111111"),
+                        new AccountNumber("2222222222"),
+                        500
+                )
+        );
+
+        assertEquals(2000, to.getBalance());
+    }
+
+    @Test
+    void transferFailsWhenRecipientDoesNotExist() {
+        BankAccount from = new DebitAccount(
+                "1111111111", "Ivan", 10000
+        );
+        bankService.openAccount(from);
+
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> bankService.transfer(
+                        new AccountNumber("1111111111"),
+                        new AccountNumber("2222222222"),
+                        500
+                )
+        );
+
+        assertEquals(10000, from.getBalance());
+    }
+
+    @Test
+    void transferFailsWhenSenderIsBlocked() {
+        BankAccount from = new DebitAccount(
+                "1111111111", "Ivan", 10000
+        );
+        BankAccount to = new DebitAccount(
+                "2222222222", "Petr", 2000
+        );
+
+        bankService.openAccount(from);
+        bankService.openAccount(to);
+
+        // Заблокируй счёт через тот же BlockedAccountRegistry,
+        // который передаётся в TransferService.
+        // Здесь нужно использовать экземпляр из setUp().
+
+        assertEquals(10000, from.getBalance());
+        assertEquals(2000, to.getBalance());
+    }
+
+    @Test
+    void transferFailsWhenFundsAreInsufficient() {
+        BankAccount from = new DebitAccount(
+                "1111111111", "Ivan", 100
+        );
+        BankAccount to = new DebitAccount(
+                "2222222222", "Petr", 2000
+        );
+
+        bankService.openAccount(from);
+        bankService.openAccount(to);
+
+        assertThrows(
+                InsufficientFundsException.class,
+                () -> bankService.transfer(
+                        new AccountNumber("1111111111"),
+                        new AccountNumber("2222222222"),
+                        500
+                )
+        );
+
+        assertEquals(100, from.getBalance());
+        assertEquals(2000, to.getBalance());
+    }
+
 }
