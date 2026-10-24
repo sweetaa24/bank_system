@@ -1,6 +1,6 @@
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
+import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 class BankServiceTest {
@@ -155,4 +155,50 @@ class BankServiceTest {
         assertEquals(2000, to.getBalance());
     }
 
+    @Test
+    void findAccountsFiltersAndReturnsNewList() {
+        BankAccount debit = new DebitAccount(
+                "1111111111", "Ivan", 5000
+        );
+        BankAccount rich = new DebitAccount(
+                "2222222222", "Petr", 150000
+        );
+        BankAccount zero = new DebitAccount(
+                "3333333333", "Anna", 0
+        );
+
+        bankService.openAccount(debit);
+        bankService.openAccount(rich);
+        bankService.openAccount(zero);
+
+        assertEquals(
+                2,
+                bankService.findAccounts(
+                        account -> account.getBalance() > 0
+                ).size()
+        );
+
+        assertEquals(
+                1,
+                bankService.findAccounts(
+                        account -> account.getBalance() >= 100_000
+                ).size()
+        );
+
+        assertEquals(
+                3,
+                bankService.findAccounts(
+                        DebitAccount.class::isInstance
+                ).size()
+        );
+
+        List<BankAccount> result = bankService.findAccounts(
+                account -> account.getBalance() > 0
+        );
+        result.clear();
+
+        assertNotNull(bankService.findAccount(
+                new AccountNumber("1111111111")
+        ));
+    }
 }
