@@ -2,6 +2,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
+import java.util.Comparator;
 
 class BankServiceTest {
     private BankService bankService;
@@ -200,5 +201,78 @@ class BankServiceTest {
         assertNotNull(bankService.findAccount(
                 new AccountNumber("1111111111")
         ));
+    }
+
+    @Test
+    void sortsAccountsByDifferentComparators() {
+        Repository<AccountNumber, BankAccount> repository =
+                new InMemoryRepository<>();
+
+        BankService bank = new BankService(
+                repository,
+                new TransferService(
+                        new NoCommission(),
+                        message -> {},
+                        new BlockedAccountRegistry(),
+                        new TransactionJournal()
+                )
+        );
+
+        BankAccount debit1 =
+                new DebitAccount("1111111111", "Ivan", 150000);
+        BankAccount debit2 =
+                new DebitAccount("2222222222", "Anna", 50000);
+        BankAccount credit =
+                new CreditAccount("3333333333", "Petr", 100000, 50000);
+        BankAccount savings =
+                new SavingsAccount("4444444444", "Maria", 75000, 1000);
+
+        bank.openAccount(debit1);
+        bank.openAccount(debit2);
+        bank.openAccount(credit);
+        bank.openAccount(savings);
+
+        Comparator<BankAccount> byBalance =
+                Comparator.comparingDouble(BankAccount::getBalance);
+
+        Comparator<BankAccount> byBalanceDesc =
+                byBalance.reversed();
+
+        Comparator<BankAccount> byNumber =
+                Comparator.comparing(a -> a.getId().value());
+
+        Comparator<BankAccount> byTypeThenBalance =
+                Comparator
+                        .comparing((BankAccount a) -> a.getClass().getSimpleName())
+                        .thenComparingDouble(BankAccount::getBalance);
+
+        assertEquals(
+                java.util.List.of(debit2, savings, credit, debit1),
+                bank.sortedAccounts(byBalance)
+        );
+
+        assertEquals(
+                java.util.List.of(debit1, credit, savings, debit2),
+                bank.sortedAccounts(byBalanceDesc)
+        );
+
+        assertEquals(
+                java.util.List.of(debit1, debit2, credit, savings),
+                bank.sortedAccounts(byNumber)
+        );
+
+        assertEquals(
+                java.util.List.of(credit, debit2, debit1, savings),
+                bank.sortedAccounts(byTypeThenBalance)
+        );
+
+        List<BankAccount> original = bank.findAccounts(a -> true);
+
+        bank.sortedAccounts(byBalance);
+        bank.sortedAccounts(byBalanceDesc);
+        bank.sortedAccounts(byNumber);
+        bank.sortedAccounts(byTypeThenBalance);
+
+        assertEquals(original, bank.findAccounts(a -> true));
     }
 }

@@ -1,5 +1,7 @@
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.ArrayList;
+import java.util.Comparator;
 
 public class BankService {
     private final Repository<AccountNumber, BankAccount> accounts;
@@ -49,5 +51,14 @@ public class BankService {
     public List<BankAccount> findAccounts(
             Predicate<? super BankAccount> condition) {
         return CollectionFunctions.filter(accounts.findAll(), condition);
+    }
+
+    public List<BankAccount> sortedAccounts(
+            Comparator<? super BankAccount> comparator) {
+        List<BankAccount> result =
+                new ArrayList<>(accounts.findAll());
+
+        result.sort(comparator);
+        return result;
     }
 }
