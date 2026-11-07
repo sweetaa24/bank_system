@@ -2,6 +2,7 @@ import java.util.List;
 import java.util.function.Predicate;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Optional;
 
 public class BankService {
     private final Repository<AccountNumber, BankAccount> accounts;
@@ -137,6 +138,12 @@ public class BankService {
     public boolean noCreditAccounts() {
         return accounts.findAll().stream()
                 .noneMatch(CreditAccount.class::isInstance);
+    }
+
+    public Optional<BankAccount> findFirstRichAccount(double minBalance) {
+        return accounts.findAll().stream()
+                .filter(a -> a.getBalance() >= minBalance)
+                .findFirst();
     }
 }
 

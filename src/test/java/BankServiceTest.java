@@ -462,4 +462,49 @@ class BankServiceTest {
         assertTrue(bank.allAccountsPositive());
         assertFalse(bank.noCreditAccounts());
     }
+
+    @Test
+    void findsFirstRichAccountAndHandlesEmptyOptional() {
+        Repository<AccountNumber, BankAccount> repository =
+                new InMemoryRepository<>();
+
+        BankService bank = new BankService(
+                repository,
+                new TransferService(
+                        new NoCommission(),
+                        message -> {},
+                        new BlockedAccountRegistry(),
+                        new TransactionJournal()
+                )
+        );
+
+        BankAccount debit = new DebitAccount(
+                "1111111111", "Ivan", 150000
+        );
+
+        BankAccount savings = new SavingsAccount(
+                "2222222222", "Maria", 75000, 1000
+        );
+
+        bank.openAccount(debit);
+        bank.openAccount(savings);
+
+        BankAccount account = bank.findFirstRichAccount(100_000)
+                .orElseThrow(() ->
+                        new IllegalStateException("No rich account"));
+
+        assertEquals(debit, account);
+
+        String label = bank.findFirstRichAccount(100_000)
+                .map(a -> a.getId().value())
+                .orElse("not found");
+
+        assertEquals("1111111111", label);
+
+        String notFound = bank.findFirstRichAccount(300_000)
+                .map(a -> a.getId().value())
+                .orElse("not found");
+
+        assertEquals("not found", notFound);
+    }
 }
