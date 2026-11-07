@@ -507,4 +507,68 @@ class BankServiceTest {
 
         assertEquals("not found", notFound);
     }
+
+    @Test
+    void calculatesBalanceStatistics() {
+        Repository<AccountNumber, BankAccount> repository =
+                new InMemoryRepository<>();
+
+        BankService bank = new BankService(
+                repository,
+                new TransferService(
+                        new NoCommission(),
+                        message -> {},
+                        new BlockedAccountRegistry(),
+                        new TransactionJournal()
+                )
+        );
+
+        BankAccount debit = new DebitAccount(
+                "1111111111", "Ivan", 150000
+        );
+
+        BankAccount credit = new CreditAccount(
+                "2222222222", "Anna", 200000, 50000
+        );
+
+        BankAccount savings = new SavingsAccount(
+                "3333333333", "Maria", 75000, 1000
+        );
+
+        bank.openAccount(debit);
+        bank.openAccount(credit);
+        bank.openAccount(savings);
+
+        assertEquals(425000, bank.totalBalance());
+
+        assertEquals(
+                425000.0 / 3,
+                bank.averageBalance().orElseThrow(),
+                0.001
+        );
+
+        assertEquals(
+                credit,
+                bank.richestAccount().orElseThrow()
+        );
+
+        Repository<AccountNumber, BankAccount> emptyRepository =
+                new InMemoryRepository<>();
+
+        BankService emptyBank = new BankService(
+                emptyRepository,
+                new TransferService(
+                        new NoCommission(),
+                        message -> {},
+                        new BlockedAccountRegistry(),
+                        new TransactionJournal()
+                )
+        );
+
+        assertEquals(0, emptyBank.totalBalance());
+        assertTrue(emptyBank.averageBalance().isEmpty());
+        assertTrue(emptyBank.richestAccount().isEmpty());
+    }
+
+
 }
