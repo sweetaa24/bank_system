@@ -331,4 +331,37 @@ class BankServiceTest {
         assertTrue(bankService.findDebitAccounts().isEmpty());
         assertTrue(bankService.findAccountsByOwner("Anna").isEmpty());
     }
+
+    @Test
+    void returnsAccountSummaries() {
+        BankAccount debit = new DebitAccount(
+                "1111111111", "Ivan", 150000
+        );
+        BankAccount credit = new CreditAccount(
+                "2222222222", "Anna", 200000, 50000
+        );
+
+        bankService.openAccount(debit);
+        bankService.openAccount(credit);
+
+        List<AccountSummary> summaries = bankService.getAccountSummaries();
+
+        assertEquals(2, summaries.size());
+
+        assertTrue(summaries.contains(
+                new AccountSummary(
+                        debit.getId(),
+                        "DebitAccount",
+                        150000
+                )
+        ));
+
+        assertTrue(summaries.contains(
+                new AccountSummary(
+                        credit.getId(),
+                        "CreditAccount",
+                        200000
+                )
+        ));
+    }
 }
