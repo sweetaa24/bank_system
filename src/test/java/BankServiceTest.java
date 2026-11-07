@@ -422,4 +422,44 @@ class BankServiceTest {
 
         assertEquals(original, repository.findAll());
     }
+
+    @Test
+    void checksAccountConditions() {
+        Repository<AccountNumber, BankAccount> repository =
+                new InMemoryRepository<>();
+
+        BlockedAccountRegistry blockedAccounts = new BlockedAccountRegistry();
+
+        BankService bank = new BankService(
+                repository,
+                new TransferService(
+                        new NoCommission(),
+                        message -> {},
+                        blockedAccounts,
+                        new TransactionJournal()
+                )
+        );
+
+        BankAccount debit = new DebitAccount(
+                "1111111111", "Ivan", 150000
+        );
+
+        BankAccount credit = new CreditAccount(
+                "2222222222", "Anna", 200000, 50000
+        );
+
+        BankAccount savings = new SavingsAccount(
+                "3333333333", "Maria", 75000, 1000
+        );
+
+        bank.openAccount(debit);
+        bank.openAccount(credit);
+        bank.openAccount(savings);
+
+        blockedAccounts.block(debit.getId());
+
+        assertTrue(bank.hasBlockedAccounts());
+        assertTrue(bank.allAccountsPositive());
+        assertFalse(bank.noCreditAccounts());
+    }
 }

@@ -65,4 +65,8 @@ public class TransferService {
                 "Transfer " + amount
         );
     }
+
+    public boolean isBlocked(AccountNumber accountNumber) {
+        return blockedAccounts.isBlocked(accountNumber);
+    }
 }
