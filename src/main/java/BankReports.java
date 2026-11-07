@@ -1,34 +1,30 @@
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class BankReports {
 
     public Map<AccountNumber, Integer> countByAccount(
             List<Transaction> transactions) {
 
-        Map<AccountNumber, Integer> result = new HashMap<>();
-
-        for (Transaction tx : transactions) {
-            AccountNumber number = tx.account();
-            int old = result.getOrDefault(number, 0);
-            result.put(number, old + 1);
-        }
-
-        return result;
+        return transactions.stream()
+                .collect(Collectors.toMap(
+                        Transaction::account,
+                        tx -> 1,
+                        Integer::sum
+                ));
     }
 
     public Map<AccountNumber, Double> totalAmountByAccount(
             List<Transaction> transactions) {
 
-        Map<AccountNumber, Double> result = new HashMap<>();
+        return transactions.stream()
+                .collect(Collectors.toMap(
+                        Transaction::account,
+                        Transaction::amount,
+                        Double::sum
+                ));
 
-        for (Transaction tx : transactions) {
-            AccountNumber number = tx.account();
-            double old = result.getOrDefault(number, 0.0);
-            result.put(number, old + tx.amount());
-        }
-
-        return result;
     }
 }
