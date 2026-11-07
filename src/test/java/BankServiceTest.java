@@ -275,4 +275,60 @@ class BankServiceTest {
 
         assertEquals(original, bank.findAccounts(a -> true));
     }
+
+    @Test
+    void filtersAccountsUsingStream() {
+        Repository<AccountNumber, BankAccount> repository =
+                new InMemoryRepository<>();
+
+        BankService bank = new BankService(
+                repository,
+                new TransferService(
+                        new NoCommission(),
+                        message -> {},
+                        new BlockedAccountRegistry(),
+                        new TransactionJournal()
+                )
+        );
+
+        BankAccount debit1 =
+                new DebitAccount("1111111111", "Ivan", 150000);
+        BankAccount debit2 =
+                new DebitAccount("2222222222", "Anna", 50000);
+        BankAccount credit =
+                new CreditAccount("3333333333", "Petr", 200000, 50000);
+
+        bank.openAccount(debit1);
+        bank.openAccount(debit2);
+        bank.openAccount(credit);
+
+        List<BankAccount> original = bank.findAccounts(a -> true);
+
+        assertEquals(
+                original.stream()
+                        .filter(DebitAccount.class::isInstance)
+                        .toList(),
+                bank.findDebitAccounts()
+        );
+
+        assertEquals(
+                List.of(debit1, credit),
+                bank.findRichAccounts(100000)
+        );
+
+
+        assertEquals(
+                List.of(debit2),
+                bank.findAccountsByOwner("Anna")
+        );
+
+        assertEquals(original, bank.findAccounts(a -> true));
+    }
+
+    @Test
+    void returnsEmptyListsWhenRepositoryIsEmpty() {
+        assertTrue(bankService.findRichAccounts(100000).isEmpty());
+        assertTrue(bankService.findDebitAccounts().isEmpty());
+        assertTrue(bankService.findAccountsByOwner("Anna").isEmpty());
+    }
 }

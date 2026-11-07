@@ -19,6 +19,10 @@ public abstract class BankAccount
         return number;
     }
 
+    public String getOwner() {
+        return owner;
+    }
+
     public void deposit(double amount){
         if (amount <= 0){
             throw new IllegalArgumentException("Amount must be positive");
