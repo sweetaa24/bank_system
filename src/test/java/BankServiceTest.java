@@ -364,4 +364,62 @@ class BankServiceTest {
                 )
         ));
     }
+
+    @Test
+    void sortsAccountsWithoutChangingRepositoryOrder() {
+        Repository<AccountNumber, BankAccount> repository =
+                new InMemoryRepository<>();
+
+        BankService bank = new BankService(
+                repository,
+                new TransferService(
+                        new NoCommission(),
+                        message -> {},
+                        new BlockedAccountRegistry(),
+                        new TransactionJournal()
+                )
+        );
+
+        BankAccount debit1 = new DebitAccount(
+                "1111111111", "Ivan", 150000
+        );
+        BankAccount debit2 = new DebitAccount(
+                "4444444444", "Ivan", 50000
+        );
+        BankAccount credit = new CreditAccount(
+                "3333333333", "Anna", 200000, 50000
+        );
+        BankAccount savings = new SavingsAccount(
+                "2222222222", "Maria", 75000, 1000
+        );
+
+        bank.openAccount(debit1);
+        bank.openAccount(debit2);
+        bank.openAccount(credit);
+        bank.openAccount(savings);
+
+        List<BankAccount> original = repository.findAll();
+
+        assertEquals(
+                List.of(credit, debit1, savings, debit2),
+                bank.richestFirst()
+        );
+
+        assertEquals(
+                List.of(debit1, savings, credit, debit2),
+                bank.accountsByNumber()
+        );
+
+        assertEquals(
+                List.of(credit, debit2, debit1, savings),
+                bank.accountsByTypeThenBalance()
+        );
+
+        assertEquals(
+                List.of(credit, debit1, debit2, savings),
+                bank.accountsByOwnerThenNumber()
+        );
+
+        assertEquals(original, repository.findAll());
+    }
 }
