@@ -3,16 +3,15 @@ import java.util.concurrent.atomic.AtomicLong;
 public class TransferService {
     private final CommissionPolicy commissionPolicy;
     private final NotificationService notificationService;
-    private final BlockedAccountRegistry blockedAccounts;
-    private final TransactionJournal journal;
-
+    private final BlockedAccountChecker blockedAccounts;
+    private final TransactionRecorder journal;
     private static final AtomicLong TRANSACTION_IDS = new AtomicLong(1);
 
     public TransferService(
             CommissionPolicy commissionPolicy,
             NotificationService notificationService,
-            BlockedAccountRegistry blockedAccounts,
-            TransactionJournal journal
+            BlockedAccountChecker blockedAccounts,
+            TransactionRecorder journal
     ) {
         this.commissionPolicy = commissionPolicy;
         this.notificationService = notificationService;

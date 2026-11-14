@@ -2,7 +2,7 @@
 import java.util.HashSet;
 import java.util.Set;
 
-public class BlockedAccountRegistry {
+public class BlockedAccountRegistry implements BlockedAccountChecker {
     private final Set<AccountNumber> blocked = new HashSet<>();
 
     public void block(AccountNumber number) {

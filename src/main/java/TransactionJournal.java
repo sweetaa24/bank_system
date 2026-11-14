@@ -2,7 +2,7 @@ import java.util.Iterator;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TransactionJournal {
+public class TransactionJournal implements TransactionRecorder {
     private final List<Transaction> transactions = new ArrayList<>();
     private final TransactionIndex index = new TransactionIndex();
 
