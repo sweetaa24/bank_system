@@ -31,14 +31,22 @@ public abstract class BankAccount
         }
         balance += amount;
     }
+
+    /**
+     * Снимает сумму со счёта.
+     * <p>
+     * Контракт для всех подклассов: при {@code amount <= 0} выбрасывается
+     * {@link IllegalArgumentException}; если правила счёта не позволяют
+     * снять сумму, выбрасывается {@link InsufficientFundsException};
+     * иначе баланс уменьшается на {@code amount}.
+     * <p>
+     * Границу допустимого остатка задаёт подкласс, поэтому вызывающий код
+     * всегда должен быть готов к {@link InsufficientFundsException}.
+     */
     public abstract void withdraw(double amount);
 
     public double getBalance(){
         return balance;
-    }
-
-    protected boolean canWithdraw(double amount){
-        return amount > 0 && balance >= amount;
     }
 
     protected void decreaseBalance(double amount) {
