@@ -28,11 +28,11 @@ class BankReportsTest {
         AccountNumber second = new AccountNumber("2222222222");
 
         List<Transaction> transactions = List.of(
-                new Transaction(1L, TransactionType.TRANSFER, first,
+                new Transaction(1L, TransactionType.TRANSFER, first, new AccountNumber("9999999999"),
                         100.0, TransactionStatus.SUCCESS),
-                new Transaction(2L, TransactionType.TRANSFER, second,
+                new Transaction(2L, TransactionType.TRANSFER, second, new AccountNumber("9999999999"),
                         200.0, TransactionStatus.SUCCESS),
-                new Transaction(3L, TransactionType.TRANSFER, first,
+                new Transaction(3L, TransactionType.TRANSFER, first, new AccountNumber("9999999999"),
                         50.0, TransactionStatus.SUCCESS)
         );
 
@@ -58,9 +58,9 @@ class BankReportsTest {
         assertEquals(first, second);
 
         List<Transaction> transactions = List.of(
-                new Transaction(1L, TransactionType.TRANSFER, first,
+                new Transaction(1L, TransactionType.TRANSFER, first, new AccountNumber("9999999999"),
                         100.0, TransactionStatus.SUCCESS),
-                new Transaction(2L, TransactionType.TRANSFER, second,
+                new Transaction(2L, TransactionType.TRANSFER, second, new AccountNumber("9999999999"),
                         50.0, TransactionStatus.SUCCESS)
         );
 

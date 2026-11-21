@@ -69,6 +69,7 @@ public class TransferService {
                 TRANSACTION_IDS.getAndIncrement(),
                 TransactionType.TRANSFER,
                 from.getId(),
+                to.getId(),
                 amount,
                 TransactionStatus.SUCCESS
         ));

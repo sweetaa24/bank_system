@@ -24,6 +24,7 @@ class TransactionIndexTest {
                 1L,
                 TransactionType.TRANSFER,
                 stored,
+                new AccountNumber("9999999999"),
                 500,
                 TransactionStatus.SUCCESS
         );
@@ -43,6 +44,7 @@ class TransactionIndexTest {
                 1L,
                 TransactionType.TRANSFER,
                 number,
+                new AccountNumber("9999999999"),
                 500,
                 TransactionStatus.SUCCESS
         ));

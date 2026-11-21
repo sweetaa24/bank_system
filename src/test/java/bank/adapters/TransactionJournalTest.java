@@ -17,11 +17,13 @@ class TransactionJournalTest {
         Transaction first = new Transaction(
                 1L, TransactionType.TRANSFER,
                 new AccountNumber("0000000001"),
+                new AccountNumber("9999999999"),
                 100, TransactionStatus.SUCCESS
         );
         Transaction second = new Transaction(
                 2L, TransactionType.DEPOSIT,
                 new AccountNumber("0000000002"),
+                null,
                 200, TransactionStatus.SUCCESS
         );
 
@@ -38,6 +40,7 @@ class TransactionJournalTest {
         Transaction transaction = new Transaction(
                 1L, TransactionType.TRANSFER,
                 new AccountNumber("0000000001"),
+                new AccountNumber("9999999999"),
                 100, TransactionStatus.SUCCESS
         );
 
@@ -54,6 +57,7 @@ class TransactionJournalTest {
         journal.add(new Transaction(
                 1L, TransactionType.TRANSFER,
                 new AccountNumber("0000000001"),
+                new AccountNumber("9999999999"),
                 100, TransactionStatus.SUCCESS
         ));
 
@@ -66,6 +70,7 @@ class TransactionJournalTest {
         Transaction transaction = new Transaction(
                 1L, TransactionType.TRANSFER,
                 new AccountNumber("0000000001"),
+                new AccountNumber("9999999999"),
                 100, TransactionStatus.SUCCESS
         );
         journal.add(transaction);
@@ -84,12 +89,14 @@ class TransactionJournalTest {
         Transaction success = new Transaction(
                 1L, TransactionType.TRANSFER,
                 new AccountNumber("0000000001"),
+                new AccountNumber("9999999999"),
                 100, TransactionStatus.SUCCESS
         );
 
         Transaction rejected = new Transaction(
                 2L, TransactionType.TRANSFER,
                 new AccountNumber("0000000002"),
+                new AccountNumber("9999999999"),
                 200, TransactionStatus.REJECTED
         );
 
@@ -109,12 +116,14 @@ class TransactionJournalTest {
         journal.add(new Transaction(
                 1L, TransactionType.TRANSFER,
                 new AccountNumber("0000000001"),
+                new AccountNumber("9999999999"),
                 100, TransactionStatus.REJECTED
         ));
 
         journal.add(new Transaction(
                 2L, TransactionType.TRANSFER,
                 new AccountNumber("0000000002"),
+                new AccountNumber("9999999999"),
                 200, TransactionStatus.REJECTED
         ));
 
@@ -130,6 +139,7 @@ class TransactionJournalTest {
                 1L,
                 TransactionType.TRANSFER,
                 number,
+                new AccountNumber("9999999999"),
                 100,
                 TransactionStatus.SUCCESS
         );
