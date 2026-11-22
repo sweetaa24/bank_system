@@ -20,7 +20,8 @@ public class BankSimulation {
             throws InterruptedException {
 
         List<BankAccount> accounts = createAccounts();
-        double expectedTotal = total(accounts);
+
+        double initialTotal = total(accounts);
 
         TransferService transferService = new TransferService(
                 new NoCommission(),
@@ -58,7 +59,7 @@ public class BankSimulation {
             thread.join();
         }
 
-        printReport(accounts, expectedTotal, successes, failures);
+        printReport(accounts, initialTotal, successes, failures);
     }
 
     private static List<BankAccount> createAccounts() {
@@ -85,7 +86,7 @@ public class BankSimulation {
 
     private static void printReport(
             List<BankAccount> accounts,
-            double expectedTotal,
+            double initialTotal,
             AtomicInteger successes,
             AtomicInteger failures) {
 
@@ -98,14 +99,14 @@ public class BankSimulation {
                     + account.getBalance());
         }
 
-        double actualTotal = total(accounts);
+        double finalTotal = total(accounts);
 
-        System.out.println("Ожидаемая сумма:  " + expectedTotal);
-        System.out.println("Фактическая сумма: " + actualTotal);
-        System.out.println("Расхождение:       "
-                + (actualTotal - expectedTotal));
-        System.out.println("Инвариант сохранён: "
-                + (actualTotal == expectedTotal));
+        System.out.println("INITIAL_TOTAL = " + initialTotal);
+        System.out.println("FINAL_TOTAL   = " + finalTotal);
+        System.out.println("Расхождение   = "
+                + (finalTotal - initialTotal));
+        System.out.println("INITIAL_TOTAL == FINAL_TOTAL: "
+                + (initialTotal == finalTotal));
         System.out.println("Успешных операций:   " + successes.get());
         System.out.println("Неуспешных операций: " + failures.get());
     }

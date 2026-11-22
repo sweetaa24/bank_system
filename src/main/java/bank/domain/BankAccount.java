@@ -25,31 +25,20 @@ public abstract class BankAccount
         return owner;
     }
 
-    public void deposit(double amount){
+    public synchronized void deposit(double amount){
         if (amount <= 0){
             throw new IllegalArgumentException("Amount must be positive");
         }
         balance += amount;
     }
 
-    /**
-     * Снимает сумму со счёта.
-     * <p>
-     * Контракт для всех подклассов: при {@code amount <= 0} выбрасывается
-     * {@link IllegalArgumentException}; если правила счёта не позволяют
-     * снять сумму, выбрасывается {@link InsufficientFundsException};
-     * иначе баланс уменьшается на {@code amount}.
-     * <p>
-     * Границу допустимого остатка задаёт подкласс, поэтому вызывающий код
-     * всегда должен быть готов к {@link InsufficientFundsException}.
-     */
     public abstract void withdraw(double amount);
 
-    public double getBalance(){
+    public synchronized double getBalance(){
         return balance;
     }
 
-    protected void decreaseBalance(double amount) {
+    protected synchronized void decreaseBalance(double amount) {
         balance -= amount;
     }
     @Override
@@ -57,7 +46,7 @@ public abstract class BankAccount
         return getClass().getSimpleName() + "{\n" +
                 " number='" + number + "',\n" +
                 " owner='" + owner + "',\n" +
-                " balance=" + balance + "\n" +
+                " balance=" + getBalance() + "\n" +
                 "}";
     }
     @Override
