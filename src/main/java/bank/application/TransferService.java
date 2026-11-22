@@ -13,6 +13,7 @@ import bank.ports.TransactionRecorder;
 
 import java.util.concurrent.atomic.AtomicLong;
 
+@Audited
 public class TransferService {
     private final CommissionPolicy commissionPolicy;
     private final NotificationService notificationService;
