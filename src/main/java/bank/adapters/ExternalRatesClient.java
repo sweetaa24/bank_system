@@ -1,5 +1,7 @@
 package bank.adapters;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -10,6 +12,9 @@ public class ExternalRatesClient {
 
     private final HttpClient client =
             HttpClient.newHttpClient();
+
+    private final ObjectMapper mapper =
+            new ObjectMapper();
 
     public String get(String url)
             throws IOException,
@@ -36,5 +41,17 @@ public class ExternalRatesClient {
         }
 
         return response.body();
+    }
+
+    public RateDto getRate(String url)
+            throws IOException,
+            InterruptedException {
+
+        String body = get(url);
+
+        return mapper.readValue(
+                body,
+                RateDto.class
+        );
     }
 }
