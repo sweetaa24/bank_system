@@ -63,8 +63,21 @@ public class TransferService {
         double commission = commissionPolicy.calculate(amount);
         double totalAmount = amount + commission;
 
-        from.withdraw(totalAmount);
-        to.deposit(amount);
+        BankAccount firstLock = from;
+        BankAccount secondLock = to;
+
+        if (from.getId().value()
+                .compareTo(to.getId().value()) > 0) {
+            firstLock = to;
+            secondLock = from;
+        }
+
+        synchronized (firstLock) {
+            synchronized (secondLock) {
+                from.withdraw(totalAmount);
+                to.deposit(amount);
+            }
+        }
 
         journal.add(new Transaction(
                 TRANSACTION_IDS.getAndIncrement(),
