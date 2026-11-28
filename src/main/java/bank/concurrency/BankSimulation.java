@@ -15,6 +15,7 @@ public class BankSimulation {
     private static final int OPERATIONS_PER_CLIENT = 2000;
     private static final int MAX_AMOUNT = 20_000;
     private static final double INITIAL_BALANCE = 100_000;
+    private static final long MONITOR_INTERVAL_MILLIS = 5;
 
     public static void main(String[] args)
             throws InterruptedException {
@@ -29,6 +30,15 @@ public class BankSimulation {
                 number -> false,
                 transaction -> {}
         );
+
+        BankMonitor monitor = new BankMonitor(
+                accounts,
+                initialTotal,
+                MONITOR_INTERVAL_MILLIS
+        );
+
+        Thread monitorThread = new Thread(monitor, "monitor");
+        monitorThread.start();
 
         AtomicInteger successes = new AtomicInteger();
         AtomicInteger failures = new AtomicInteger();
@@ -58,6 +68,9 @@ public class BankSimulation {
         for (Thread thread : threads) {
             thread.join();
         }
+
+        monitor.stop();
+        monitorThread.join();
 
         printReport(accounts, initialTotal, successes, failures);
     }
