@@ -5,7 +5,6 @@ import bank.domain.BankAccount;
 
 import java.util.List;
 import java.util.Random;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class TransferClient implements Runnable {
 
@@ -14,8 +13,7 @@ public class TransferClient implements Runnable {
     private final TransferService transferService;
     private final int operations;
     private final int maxAmount;
-    private final AtomicInteger successes;
-    private final AtomicInteger failures;
+    private final BankStatistics statistics;
     private final Random random = new Random();
 
     public TransferClient(
@@ -24,16 +22,14 @@ public class TransferClient implements Runnable {
             TransferService transferService,
             int operations,
             int maxAmount,
-            AtomicInteger successes,
-            AtomicInteger failures) {
+            BankStatistics statistics) {
 
         this.name = name;
         this.accounts = accounts;
         this.transferService = transferService;
         this.operations = operations;
         this.maxAmount = maxAmount;
-        this.successes = successes;
-        this.failures = failures;
+        this.statistics = statistics;
     }
 
     public String getName() {
@@ -45,9 +41,9 @@ public class TransferClient implements Runnable {
         for (int i = 0; i < operations; i++) {
             try {
                 transferOnce();
-                successes.incrementAndGet();
+                statistics.recordSuccess();
             } catch (RuntimeException e) {
-                failures.incrementAndGet();
+                statistics.recordFailure();
             }
         }
     }

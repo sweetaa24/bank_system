@@ -7,8 +7,6 @@ import bank.domain.NoCommission;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
-
 public class BankSimulation {
 
     private static final int CLIENTS = 5;
@@ -40,8 +38,7 @@ public class BankSimulation {
         Thread monitorThread = new Thread(monitor, "monitor");
         monitorThread.start();
 
-        AtomicInteger successes = new AtomicInteger();
-        AtomicInteger failures = new AtomicInteger();
+        BankStatistics statistics = new BankStatistics();
 
         List<Thread> threads = new ArrayList<>();
 
@@ -55,8 +52,7 @@ public class BankSimulation {
                             transferService,
                             OPERATIONS_PER_CLIENT,
                             MAX_AMOUNT,
-                            successes,
-                            failures
+                            statistics
                     ),
                     name
             );
@@ -73,7 +69,7 @@ public class BankSimulation {
         monitorThread.interrupt();
         monitorThread.join();
 
-        printReport(accounts, initialTotal, successes, failures);
+        printReport(accounts, initialTotal, statistics);
     }
 
     private static List<BankAccount> createAccounts() {
@@ -101,8 +97,7 @@ public class BankSimulation {
     private static void printReport(
             List<BankAccount> accounts,
             double initialTotal,
-            AtomicInteger successes,
-            AtomicInteger failures) {
+            BankStatistics statistics) {
 
         System.out.println("Итоговые балансы:");
 
@@ -121,7 +116,15 @@ public class BankSimulation {
                 + (finalTotal - initialTotal));
         System.out.println("INITIAL_TOTAL == FINAL_TOTAL: "
                 + (initialTotal == finalTotal));
-        System.out.println("Успешных операций:   " + successes.get());
-        System.out.println("Неуспешных операций: " + failures.get());
+        int totalAttempts = CLIENTS * OPERATIONS_PER_CLIENT;
+
+        System.out.println("successfulTransfers = "
+                + statistics.successfulTransfers());
+        System.out.println("failedTransfers     = "
+                + statistics.failedTransfers());
+        System.out.println("totalAttempts       = " + totalAttempts);
+        System.out.println(
+                "successfulTransfers + failedTransfers == totalAttempts: "
+                        + (statistics.recordedTotal() == totalAttempts));
     }
 }
