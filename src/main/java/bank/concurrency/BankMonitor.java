@@ -39,9 +39,11 @@ public class BankMonitor implements Runnable {
                 Thread.sleep(intervalMillis);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
-                return;
+                break;
             }
         }
+
+        System.out.println("[MONITOR] stopped");
     }
 
     private void check() {

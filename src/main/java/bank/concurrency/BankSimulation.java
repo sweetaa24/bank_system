@@ -70,6 +70,7 @@ public class BankSimulation {
         }
 
         monitor.stop();
+        monitorThread.interrupt();
         monitorThread.join();
 
         printReport(accounts, initialTotal, successes, failures);
